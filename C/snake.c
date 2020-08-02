@@ -37,6 +37,7 @@ void check_null(void *ptr, char *msg)
 	if (ptr == NULL)
 	{
 		fprintf(stderr, "Null pointer: %s\n", msg);
+		exit(1);
 	}
 }
 
@@ -51,7 +52,8 @@ void draw_border(int height, int width)
 		mvaddch(height - 1, x, '-');
 	}
 
-	for (int y = 0; y < height; y++){
+	for (int y = 0; y < height; y++)
+	{
 		mvaddch(y, width - 1, '|');
 		mvaddch(y, 0, '|');
 	}
@@ -159,6 +161,15 @@ uint8_t draw_snake(snake_t *snake, int width, int height)
 	return 0;
 }
 
+void free_segment(segment_t *segment)
+{
+	if (segment != NULL)
+	{
+		free_segment(segment->next);
+		free(segment);
+	}
+}
+
 int main()
 {
 	int HEIGHT, WIDTH;
@@ -241,4 +252,5 @@ int main()
 	endwin();
 
 	printf("total score: %d\n", points);
+	free_segment(snake.head);
 }
